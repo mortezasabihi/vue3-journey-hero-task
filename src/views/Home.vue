@@ -13,7 +13,7 @@
             <template v-for="n in 6" :key="n">
               <Todo :title="`Message ${n}`" :id="n"
                 description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique"
-                created-at="Jan 9, 2022" />
+                created-at="Jan 9, 2022" @on-edit-click="handleOnEditClick(n)" />
 
               <VDivider v-if="n !== 6" :key="`divider-${n}`" inset />
             </template>
@@ -26,7 +26,7 @@
   <VBtn density="comfortable" icon="mdi-plus" size="x-large" position="absolute" color="blue-darken-1"
     class="new-todolist-btn" @click="modal = true" />
 
-  <Modal v-model="modal" title="New Todo">
+  <Modal v-model="modal" @update:model-value="selected = 0" :title="selected === 0 ? 'New Modal' : 'Edit Modal'">
     <TodoForm />
   </Modal>
 </template>
@@ -39,6 +39,12 @@ import Modal from '@/components/Modal.vue';
 import TodoForm from '@/components/Todo/TodoForm.vue';
 
 const modal = ref(false)
+const selected = ref(0)
+
+const handleOnEditClick = (id: number) => {
+  selected.value = id
+  modal.value = true
+}
 </script>
 
 <style scoped>
