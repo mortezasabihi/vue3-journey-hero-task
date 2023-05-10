@@ -9,7 +9,7 @@
           label="Description*" />
       </VCol>
       <VCol cols="12">
-        <VBtn type="submit">Submit</VBtn>
+        <VBtn color="green" type="submit">Submit</VBtn>
       </VCol>
     </VRow>
   </form>
