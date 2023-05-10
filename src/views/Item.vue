@@ -4,10 +4,14 @@
       <VCol cols="12">
         <VRow>
           <VCol cols="12" md="8">
-            <div class="mb-4">
-              <h2 class="text-h6 mb-1">{{ todo?.title }}</h2>
+            <div class="d-flex align-start">
+              <div class="mb-4 mr-2">
+                <h2 class="text-h6 mb-1">{{ todo?.title }}</h2>
 
-              <p>{{ todo?.description }}</p>
+                <p>{{ todo?.description }}</p>
+              </div>
+
+              <VBtn @click="modal = true" density="comfortable" icon="mdi-plus" color="blue-darken-1" />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -30,20 +34,29 @@
       </VCol>
     </VRow>
   </VContainer>
+
+  <Modal v-model="modal" @update:model-value="selected = 0" :title="selected === 0 ? 'New Todo Item' : 'Edit Todo Item'">
+    <TodoItemForm @submit="handleOnSubmit" />
+  </Modal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { VContainer, VRow, VCol, VCard, VTextField } from 'vuetify/components'
+import { VContainer, VRow, VCol, VCard, VTextField, VBtn } from 'vuetify/components'
 import useTodoStore from '@/store/todo'
 import TodoItem from '@/components/Todo/TodoItem/TodoItem.vue'
+import Modal from '@/components/Modal.vue'
+import TodoItemForm from '@/components/Todo/TodoItem/TodoItemForm.vue'
+import { TTodoItemForm } from '@/types/todo'
 
 const route = useRoute()
 const param = route.params.id;
 const store = useTodoStore()
 const todo = store.getTodo(Number(param) || 0)
-const search = ref<string>('')
+const search = ref('')
+const modal = ref(false)
+const selected = ref(0)
 
 const filteredTodo = computed(() => {
   if (search.value.trim().length) {
@@ -64,4 +77,17 @@ const filteredTodo = computed(() => {
 
   return todo
 })
+
+const handleOnSubmit = (form: TTodoItemForm) => {
+  // create
+  if (selected.value === 0) {
+    store.createTodoItem(Number(param), form)
+  } else {
+    // update
+    // store.updateTodo(selected.value, { ...form })
+  }
+
+  selected.value = 0
+  modal.value = false
+}
 </script>

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { faker } from '@faker-js/faker'
-import type { ITodo, TTodoForm } from '@/types/todo'
+import type { ITodo, TTodoForm, TTodoItemForm } from '@/types/todo'
 
 // fake data
 const randomNumber = (min: number, max: number) => {
@@ -40,6 +40,16 @@ const useTodoStore = defineStore('todo', {
         description,
         createdAt: new Date().toString(),
         items: []
+      })
+    },
+    createTodoItem(parentId: number, form: TTodoItemForm) {
+      const todo = this.list.find(todo => todo.id === parentId)
+
+      if (!todo) return
+
+      todo.items.push({
+        id: Number(faker.random.numeric(2)),
+        ...form
       })
     },
     updateTodo(id: number, { title, description }: TTodoForm) {

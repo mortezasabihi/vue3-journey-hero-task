@@ -15,3 +15,4 @@ export interface ITodo {
 }
 
 export type TTodoForm = Pick<ITodo, 'title' | 'description'>
+export type TTodoItemForm = Omit<ITodoItem, 'id'>
