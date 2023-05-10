@@ -21,17 +21,22 @@
     </VRow>
   </VContainer>
 
-  <VBtn density="comfortable" icon="mdi-plus" size="x-large" position="absolute" color="blue-darken-1"
+  <VBtn density="comfortable" icon="mdi-plus" size="x-large" position="fixed" color="blue-darken-1"
     class="new-todolist-btn" @click="modal = true" />
 
   <Modal v-model="modal" @update:model-value="selected = 0" :title="selected === 0 ? 'New Modal' : 'Edit Modal'">
     <TodoForm :value="store.getTodo(selected)" @submit="handleOnSubmit" />
   </Modal>
+
+  <!-- Add / Update Alert -->
+  <VSnackbar v-model="showAlert" :timeout="2000" color="teal" location="bottom left">
+    Todo {{ action }}
+  </VSnackbar>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { VContainer, VRow, VCol, VCard, VList, VDivider, VBtn } from 'vuetify/components'
+import { VContainer, VRow, VCol, VCard, VList, VDivider, VBtn, VSnackbar } from 'vuetify/components'
 import Todo from '@/components/Todo/Todo.vue'
 import Modal from '@/components/Modal.vue'
 import TodoForm from '@/components/Todo/TodoForm.vue'
@@ -40,6 +45,8 @@ import type { TTodoForm } from '@/types/todo'
 
 const modal = ref(false)
 const selected = ref(0)
+const showAlert = ref(false)
+const action = ref<'added' | 'updated'>()
 const store = useTodoStore()
 
 const handleOnEditClick = (id: number) => {
@@ -51,11 +58,14 @@ const handleOnSubmit = (form: TTodoForm) => {
   // create
   if (selected.value === 0) {
     store.createTodo({ ...form })
+    action.value = 'added'
   } else {
     // update
     store.updateTodo(selected.value, { ...form })
+    action.value = 'updated'
   }
 
+  showAlert.value = true
   selected.value = 0
   modal.value = false
 }
