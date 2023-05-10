@@ -2,13 +2,14 @@
   <div>
     <!-- Hide/Display fields -->
     <div class="px-2">
-      <div class="text-h6 pt-2">Hide Fields</div>
+      <div class="text-body-1 pt-2">Hide Fields</div>
       <VRow class="px-2">
         <VCol cols="12" md="2" v-for="(field, index) in fields" :key="index">
           <VSwitch :label="field.hidden ? `${field.label} - (hidden)` : field.label" v-model="field.hidden" hideDetails />
         </VCol>
       </VRow>
     </div>
+
     <VDivider />
   </div>
 
