@@ -1,7 +1,9 @@
 <template>
-  <HelloWorld />
+  <VContainer>
+
+  </VContainer>
 </template>
 
-<script lang="ts" setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+<script setup lang="ts">
+import { VContainer } from 'vuetify/components'
 </script>
