@@ -29,14 +29,17 @@
 
         <VCard>
           <!-- Table -->
-          <TodoItem :items="filteredTodo?.items || []" />
+          <TodoItem :items="filteredTodo?.items || []" @on-edit-click="
+            selected = $event;
+          modal = true
+            " />
         </VCard>
       </VCol>
     </VRow>
   </VContainer>
 
   <Modal v-model="modal" @update:model-value="selected = 0" :title="selected === 0 ? 'New Todo Item' : 'Edit Todo Item'">
-    <TodoItemForm @submit="handleOnSubmit" />
+    <TodoItemForm :value="store.getTodoItem(Number($route.params.id), selected) || undefined" @submit="handleOnSubmit" />
   </Modal>
 </template>
 
@@ -79,12 +82,13 @@ const filteredTodo = computed(() => {
 })
 
 const handleOnSubmit = (form: TTodoItemForm) => {
+  const parentId = Number(param)
   // create
   if (selected.value === 0) {
-    store.createTodoItem(Number(param), form)
+    store.createTodoItem(parentId, form)
   } else {
     // update
-    // store.updateTodo(selected.value, { ...form })
+    store.updateTodoItem(parentId, selected.value, { ...form })
   }
 
   selected.value = 0

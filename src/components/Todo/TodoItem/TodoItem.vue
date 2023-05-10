@@ -22,12 +22,27 @@
         {{ value }}
       </strong>
     </template>
+    <template #cell(actions)="{ item }">
+      <!-- Edit Button -->
+      <VTooltip text="Edit" location="left">
+        <template v-slot:activator="{ props }">
+          <VBtn v-bind="props" @click.prevent="$emit('onEditClick', item.id)" icon=" mdi-pen" variant="text"
+            size="small" />
+        </template>
+      </VTooltip>
+      <!-- Delete Button -->
+      <VTooltip text="Delete" location="top">
+        <template v-slot:activator="{ props }">
+          <VBtn v-bind="props" color="red-lighten-1" icon="mdi-trash-can" variant="text" size="small" />
+        </template>
+      </VTooltip>
+    </template>
   </Table>
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive } from 'vue'
-import { VRow, VSwitch, VCol, VDivider } from 'vuetify/components'
+import { defineProps, reactive, defineEmits } from 'vue'
+import { VRow, VSwitch, VCol, VDivider, VTooltip, VBtn } from 'vuetify/components'
 import type { ITodoItem } from '@/types/todo'
 import Table, { type IField } from '@/components/Table.vue'
 import { format } from 'date-fns'
@@ -35,8 +50,12 @@ import { format } from 'date-fns'
 interface Props {
   items: ITodoItem[]
 }
+interface Emits {
+  (ev: 'onEditClick', value: number): void
+}
 
 defineProps<Props>()
+defineEmits<Emits>()
 
 const colorsClass = {
   low: 'bg-yellow',
@@ -64,6 +83,10 @@ const fields = reactive<IField[]>([
     key: 'priority',
     label: 'Priority',
     hidden: false
+  },
+  {
+    key: 'actions',
+    label: 'Actions',
   },
 ])
 </script>

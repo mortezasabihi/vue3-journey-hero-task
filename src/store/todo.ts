@@ -30,7 +30,14 @@ const useTodoStore = defineStore('todo', {
     list: todo
   }),
   getters: {
-    getTodo: (state) => (id: Number) => state.list.find(t => t.id === id)
+    getTodo: (state) => (id: number) => state.list.find(t => t.id === id),
+    getTodoItem: (state) => (parentId: number, id: number) => {
+      const parentTodo = state.list.find((todo) => todo.id === parentId);
+
+      if (!parentTodo) return;
+
+      return parentTodo.items.find((item) => item.id === id)
+    }
   },
   actions: {
     createTodo({ title, description }: TTodoForm) {
@@ -59,6 +66,20 @@ const useTodoStore = defineStore('todo', {
 
       this.list[foundIndex].title = title
       this.list[foundIndex].description = description
+    },
+    updateTodoItem(parentId: number, id: number, form: TTodoItemForm) {
+      const parentTodo = this.list.find((todo) => todo.id === parentId)
+
+      if (!parentTodo) return
+
+      const foundIndex = parentTodo.items.findIndex((item) => item.id === id)
+
+      if (foundIndex === -1) return
+
+      parentTodo.items[foundIndex] = {
+        ...parentTodo.items[foundIndex],
+        ...form
+      }
     },
     deleteTodo(id: number) {
       const foundIndex = this.list.findIndex((todo) => todo.id === id);
