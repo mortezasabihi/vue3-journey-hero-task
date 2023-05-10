@@ -5,17 +5,15 @@
         <div class="d-flex justify-space-between align-center mb-4">
           <h2 class="text-h6">List</h2>
 
-          <div class="text-caption">Count: 4</div>
+          <div class="text-caption">Count: {{ store.list.length }}</div>
         </div>
 
         <VCard>
           <VList lines="two">
-            <template v-for="n in 6" :key="n">
-              <Todo :title="`Message ${n}`" :id="n"
-                description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique"
-                created-at="Jan 9, 2022" @on-edit-click="handleOnEditClick(n)" />
+            <template v-for="(todo, index) in store.list" :key="index">
+              <Todo :todo="todo" @on-edit-click="handleOnEditClick(todo.id)" />
 
-              <VDivider v-if="n !== 6" :key="`divider-${n}`" inset />
+              <VDivider v-if="index !== store.list.length - 1" :key="`divider-${index}`" inset />
             </template>
           </VList>
         </VCard>
@@ -27,23 +25,41 @@
     class="new-todolist-btn" @click="modal = true" />
 
   <Modal v-model="modal" @update:model-value="selected = 0" :title="selected === 0 ? 'New Modal' : 'Edit Modal'">
-    <TodoForm />
+    <TodoForm :value="selectedTodo" @submit="handleOnSubmit" />
   </Modal>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { VContainer, VRow, VCol, VCard, VList, VDivider, VBtn } from 'vuetify/components'
 import Todo from '@/components/Todo/Todo.vue';
 import Modal from '@/components/Modal.vue';
 import TodoForm from '@/components/Todo/TodoForm.vue';
+import useTodoStore from '@/store/todo'
+import type { TTodoForm } from '@/types/todo'
 
 const modal = ref(false)
 const selected = ref(0)
+const store = useTodoStore();
+
+const selectedTodo = computed(() => store.list.find(t => t.id === selected.value))
 
 const handleOnEditClick = (id: number) => {
   selected.value = id
   modal.value = true
+}
+
+const handleOnSubmit = (form: TTodoForm) => {
+  // create
+  if (selected.value === 0) {
+    store.createTodo({ ...form })
+  } else {
+    // update
+    store.updateTodo(selected.value, { ...form })
+  }
+
+  selected.value = 0
+  modal.value = false
 }
 </script>
 

@@ -16,28 +16,39 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
 import { VCol, VRow, VTextField, VTextarea, VBtn } from 'vuetify/components'
 import { object, string } from 'yup'
 import { useField, useForm } from 'vee-validate'
+import type { TTodoForm } from '@/types/todo'
 
-interface Form {
-  title: string;
-  description: string;
+interface Props {
+  value?: TTodoForm
+}
+interface Emits {
+  (ev: 'submit', value: TTodoForm): void
 }
 
-const validationSchema = object<Form>({
+const props = defineProps<Props>()
+const emits = defineEmits<Emits>()
+
+const validationSchema = object<TTodoForm>({
   title: string().required('Title is required'),
   description: string().required('Description is required'),
 })
 
-const { handleSubmit } = useForm<Form>({
-  validationSchema
+const { handleSubmit } = useForm<TTodoForm>({
+  validationSchema,
+  initialValues: {
+    title: props.value?.title || '',
+    description: props.value?.description || '',
+  }
 })
 
-const title = useField<Form['title']>('title')
-const description = useField<Form['description']>('description')
+const title = useField<TTodoForm['title']>('title')
+const description = useField<TTodoForm['description']>('description')
 
 const onSubmit = handleSubmit(values => {
-  alert(JSON.stringify(values, null, 2))
+  emits('submit', values)
 })
 </script>
