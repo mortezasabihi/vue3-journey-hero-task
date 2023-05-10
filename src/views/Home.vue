@@ -25,24 +25,22 @@
     class="new-todolist-btn" @click="modal = true" />
 
   <Modal v-model="modal" @update:model-value="selected = 0" :title="selected === 0 ? 'New Modal' : 'Edit Modal'">
-    <TodoForm :value="selectedTodo" @submit="handleOnSubmit" />
+    <TodoForm :value="store.getTodo(selected)" @submit="handleOnSubmit" />
   </Modal>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { VContainer, VRow, VCol, VCard, VList, VDivider, VBtn } from 'vuetify/components'
-import Todo from '@/components/Todo/Todo.vue';
-import Modal from '@/components/Modal.vue';
-import TodoForm from '@/components/Todo/TodoForm.vue';
+import Todo from '@/components/Todo/Todo.vue'
+import Modal from '@/components/Modal.vue'
+import TodoForm from '@/components/Todo/TodoForm.vue'
 import useTodoStore from '@/store/todo'
 import type { TTodoForm } from '@/types/todo'
 
 const modal = ref(false)
 const selected = ref(0)
-const store = useTodoStore();
-
-const selectedTodo = computed(() => store.list.find(t => t.id === selected.value))
+const store = useTodoStore()
 
 const handleOnEditClick = (id: number) => {
   selected.value = id

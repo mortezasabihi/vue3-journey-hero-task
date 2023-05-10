@@ -9,6 +9,7 @@
         </div>
 
         <VCard>
+          <TodoItem :items="todo?.items || []" />
         </VCard>
       </VCol>
     </VRow>
@@ -19,6 +20,7 @@
 import { useRoute } from 'vue-router'
 import { VContainer, VRow, VCol, VCard } from 'vuetify/components'
 import useTodoStore from '@/store/todo'
+import TodoItem from '@/components/Todo/TodoItem/TodoItem.vue'
 
 const route = useRoute()
 const param = route.params.id;

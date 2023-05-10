@@ -46,7 +46,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const displayedFields = computed(() => props.fields.filter((i) => !i.hidden))
-const displayedFieldKeys = computed(() => Object.entries(props.fields).map(([_key, value]) => value.key))
+const displayedFieldKeys = computed(() => Object.entries(displayedFields.value).map(([_key, value]) => value.key))
 
 const cellElement = (key: string) => {
   const field = props.fields.find((f) => f.key === key)
