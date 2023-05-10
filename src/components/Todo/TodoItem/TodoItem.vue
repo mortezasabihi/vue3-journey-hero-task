@@ -1,4 +1,17 @@
 <template>
+  <div>
+    <!-- Hide/Display fields -->
+    <div class="px-2">
+      <div class="text-h6 pt-2">Hide Fields</div>
+      <VRow class="px-2">
+        <VCol cols="12" md="2" v-for="(field, index) in fields" :key="index">
+          <VSwitch :label="field.hidden ? `${field.label} - (hidden)` : field.label" v-model="field.hidden" hideDetails />
+        </VCol>
+      </VRow>
+    </div>
+    <VDivider />
+  </div>
+
   <Table :fields="fields" :items="items">
     <template #cell(dueDate)="{ value }">
       <span class="text-caption">{{ format(new Date(value as string), 'EEEE, MMMM do, yyyy hh:mm a') }}</span>
@@ -13,6 +26,7 @@
 
 <script setup lang="ts">
 import { defineProps, reactive } from 'vue'
+import { VRow, VSwitch, VCol, VDivider } from 'vuetify/components'
 import type { ITodoItem } from '@/types/todo'
 import Table, { type IField } from '@/components/Table.vue'
 import { format } from 'date-fns'
