@@ -24,12 +24,21 @@
   </VContainer>
 
   <VBtn density="comfortable" icon="mdi-plus" size="x-large" position="absolute" color="blue-darken-1"
-    class="new-todolist-btn" />
+    class="new-todolist-btn" @click="modal = true" />
+
+  <Modal v-model="modal" title="New Todo">
+    <TodoForm />
+  </Modal>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { VContainer, VRow, VCol, VCard, VList, VDivider, VBtn } from 'vuetify/components'
-import Todo from '@/components/Pages/Home/Todo.vue';
+import Todo from '@/components/Todo/Todo.vue';
+import Modal from '@/components/Modal.vue';
+import TodoForm from '@/components/Todo/TodoForm.vue';
+
+const modal = ref(false)
 </script>
 
 <style scoped>
