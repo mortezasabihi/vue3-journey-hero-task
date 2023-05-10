@@ -15,7 +15,7 @@
 
   <Table :fields="fields" :items="items">
     <template #cell(dueDate)="{ value }">
-      <span class="text-caption">{{ format(new Date(value as string), 'EEEE, MMMM do, yyyy hh:mm a') }}</span>
+      <span class="text-caption">{{ formatDate(value as string) }}</span>
     </template>
     <template #cell(priority)="{ value }">
       <strong class="text-uppercase d-flex justify-center align-center h-100" :class="colorsClass[value]">
@@ -52,7 +52,7 @@ import { useRoute } from 'vue-router'
 import { VRow, VSwitch, VCol, VDivider, VTooltip, VBtn, VSnackbar } from 'vuetify/components'
 import type { ITodoItem } from '@/types/todo'
 import Table, { type IField } from '@/components/Table.vue'
-import { format } from 'date-fns'
+import formatDate from '@/utils/formatDate'
 import useTodoStore from '@/store/todo'
 
 interface Props {
