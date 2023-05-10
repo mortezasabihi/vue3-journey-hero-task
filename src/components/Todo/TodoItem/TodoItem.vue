@@ -33,19 +33,27 @@
       <!-- Delete Button -->
       <VTooltip text="Delete" location="top">
         <template v-slot:activator="{ props }">
-          <VBtn v-bind="props" color="red-lighten-1" icon="mdi-trash-can" variant="text" size="small" />
+          <VBtn v-bind="props" @click.prevent="onDelete(item.id)" color="red-lighten-1" icon="mdi-trash-can"
+            variant="text" size="small" />
         </template>
       </VTooltip>
     </template>
   </Table>
+
+  <!-- Delete Alert -->
+  <VSnackbar v-model="showAlert" :timeout="2000" color="teal" location="bottom left">
+    todo item is deleted
+  </VSnackbar>
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive, defineEmits } from 'vue'
-import { VRow, VSwitch, VCol, VDivider, VTooltip, VBtn } from 'vuetify/components'
+import { defineProps, reactive, defineEmits, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { VRow, VSwitch, VCol, VDivider, VTooltip, VBtn, VSnackbar } from 'vuetify/components'
 import type { ITodoItem } from '@/types/todo'
 import Table, { type IField } from '@/components/Table.vue'
 import { format } from 'date-fns'
+import useTodoStore from '@/store/todo'
 
 interface Props {
   items: ITodoItem[]
@@ -57,6 +65,10 @@ interface Emits {
 defineProps<Props>()
 defineEmits<Emits>()
 
+const route = useRoute()
+const store = useTodoStore()
+const showAlert = ref(false)
+
 const colorsClass = {
   low: 'bg-yellow',
   medium: 'bg-orange',
@@ -64,6 +76,11 @@ const colorsClass = {
 }
 
 const fields = reactive<IField[]>([
+  {
+    key: 'id',
+    label: 'Id',
+    hidden: false
+  },
   {
     key: 'title',
     label: 'Title',
@@ -89,4 +106,14 @@ const fields = reactive<IField[]>([
     label: 'Actions',
   },
 ])
+
+const onDelete = (id: number) => {
+  const result = window.confirm(`Do you want to delete todo item with "${id}" id?`)
+
+  showAlert.value = result
+
+  if (result) {
+    store.deleteTodoItem(Number(route.params.id), id)
+  }
+}
 </script>

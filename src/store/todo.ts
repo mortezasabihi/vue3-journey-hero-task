@@ -87,7 +87,19 @@ const useTodoStore = defineStore('todo', {
       if (foundIndex === -1) return
 
       this.list.splice(foundIndex, 1);
-    }
+    },
+    deleteTodoItem(parentId: number, id: number) {
+      const parentTodo = this.list.find((todo) => todo.id === parentId);
+
+      if (!parentTodo) return;
+
+      const foundIndex = parentTodo.items.findIndex((item) => item.id === id);
+
+      if (foundIndex === -1) return;
+
+      parentTodo.items.splice(foundIndex, 1);
+    },
+
   },
   persist: {
     enabled: true,
