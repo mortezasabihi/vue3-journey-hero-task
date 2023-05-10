@@ -1,5 +1,5 @@
 <template>
-  <VApp>
+  <VApp style="background: #eee">
     <Navbar />
 
     <VMain>
