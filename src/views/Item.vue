@@ -41,12 +41,17 @@
   <Modal v-model="modal" @update:model-value="selected = 0" :title="selected === 0 ? 'New Todo Item' : 'Edit Todo Item'">
     <TodoItemForm :value="store.getTodoItem(Number($route.params.id), selected) || undefined" @submit="handleOnSubmit" />
   </Modal>
+
+  <!-- Add / Update Alert -->
+  <VSnackbar v-model="showAlert" :timeout="2000" color="teal" location="bottom left">
+    Todo item {{ action }}
+  </VSnackbar>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { VContainer, VRow, VCol, VCard, VTextField, VBtn } from 'vuetify/components'
+import { VContainer, VRow, VCol, VCard, VTextField, VBtn, VSnackbar } from 'vuetify/components'
 import useTodoStore from '@/store/todo'
 import TodoItem from '@/components/Todo/TodoItem/TodoItem.vue'
 import Modal from '@/components/Modal.vue'
@@ -60,6 +65,8 @@ const todo = store.getTodo(Number(param) || 0)
 const search = ref('')
 const modal = ref(false)
 const selected = ref(0)
+const showAlert = ref(false)
+const action = ref<'added' | 'updated'>()
 
 const filteredTodo = computed(() => {
   if (search.value.trim().length) {
@@ -86,11 +93,14 @@ const handleOnSubmit = (form: TTodoItemForm) => {
   // create
   if (selected.value === 0) {
     store.createTodoItem(parentId, form)
+    action.value = 'added'
   } else {
     // update
     store.updateTodoItem(parentId, selected.value, { ...form })
+    action.value = 'updated'
   }
 
+  showAlert.value = true
   selected.value = 0
   modal.value = false
 }

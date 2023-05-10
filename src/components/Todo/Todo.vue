@@ -32,6 +32,7 @@
     </template>
   </VListItem>
 
+  <!-- Delete Alert -->
   <VSnackbar v-model="showAlert" :timeout="2000" color="teal" location="bottom left">
     "{{ todo.title }}" todo is deleted
   </VSnackbar>
