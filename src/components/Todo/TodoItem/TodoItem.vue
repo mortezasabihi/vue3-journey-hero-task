@@ -22,6 +22,7 @@
         {{ value }}
       </strong>
     </template>
+    <!-- Toggle Done field -->
     <template #cell(done)="{ value, item, }">
       <VBtn @click="onToggle(item.id)" icon variant="text">
         <VIcon v-if="value" icon="mdi-check-circle-outline" />
