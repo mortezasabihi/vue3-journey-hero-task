@@ -1,0 +1,37 @@
+name: Deploy Site to Github Pages
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.18
+
+      - name: Yarn Install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+
+      - name: Build Site
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: site/dist
