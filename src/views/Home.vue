@@ -9,13 +9,18 @@
         </div>
 
         <VCard>
-          <VList lines="two">
+          <VList v-if="store.list.length" lines="two">
             <template v-for="(todo, index) in store.list" :key="index">
               <Todo :todo="todo" @on-edit-click="handleOnEditClick(todo.id)" />
 
               <VDivider v-if="index !== store.list.length - 1" :key="`divider-${index}`" inset />
             </template>
           </VList>
+
+          <VCardText v-else>
+            <p class="text-center text-lg-body-1 pa-10">Click on the + button and start creating Todos :)</p>
+          </VCardText>
+
         </VCard>
       </VCol>
     </VRow>
@@ -36,7 +41,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { VContainer, VRow, VCol, VCard, VList, VDivider, VBtn, VSnackbar } from 'vuetify/components'
+import { VContainer, VRow, VCol, VCard, VList, VDivider, VBtn, VSnackbar, VCardText } from 'vuetify/components'
 import Todo from '@/components/Todo/Todo.vue'
 import Modal from '@/components/Modal.vue'
 import TodoForm from '@/components/Todo/TodoForm.vue'

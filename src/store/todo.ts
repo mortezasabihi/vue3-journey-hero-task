@@ -1,35 +1,18 @@
 import { defineStore } from 'pinia'
-import { faker } from '@faker-js/faker'
 import type { ITodo, TTodoForm, TTodoItemForm } from '@/types/todo'
 
 // fake data
 const randomNumber = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
-
-const createRandomTodo = (): ITodo => {
-  return {
-    id: Number(faker.random.numeric(2)),
-    title: faker.name.jobTitle(),
-    description: faker.lorem.lines(1),
-    createdAt: faker.date.past().toString(),
-    items: Array(randomNumber(1, 10)).fill(null).map(() => ({
-      id: Number(faker.random.numeric(2)),
-      title: faker.lorem.words(3),
-      description: faker.lorem.sentence(),
-      dueDate: faker.date.future().toString(),
-      priority: faker.helpers.arrayElement(['low', 'medium', 'high']),
-      done: faker.datatype.boolean()
-    }))
-  }
+interface IRootState {
+  list: ITodo[]
 }
-
-const todo = Array(6).fill(null).map(createRandomTodo)
 
 const useTodoStore = defineStore('todo', {
   state: () => ({
-    list: todo
-  }),
+    list: []
+  } as IRootState),
   getters: {
     getTodo: (state) => (id: number) => state.list.find(t => t.id === id),
     getTodoItem: (state) => (parentId: number, id: number) => {
@@ -43,7 +26,7 @@ const useTodoStore = defineStore('todo', {
   actions: {
     createTodo({ title, description }: TTodoForm) {
       this.list.push({
-        id: Number(faker.random.numeric(2)),
+        id: randomNumber(1, 900),
         title,
         description,
         createdAt: new Date().toString(),
@@ -56,7 +39,7 @@ const useTodoStore = defineStore('todo', {
       if (!todo) return
 
       todo.items.push({
-        id: Number(faker.random.numeric(2)),
+        id: randomNumber(1, 100),
         ...form
       })
     },
