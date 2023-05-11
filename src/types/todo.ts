@@ -3,7 +3,8 @@ export interface ITodoItem {
   title: string
   description: string
   dueDate: string
-  priority: 'low' | 'medium' | 'high'
+  priority: 'low' | 'medium' | 'high',
+  done: boolean
 }
 
 export interface ITodo {

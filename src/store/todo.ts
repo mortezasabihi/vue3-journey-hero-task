@@ -18,7 +18,8 @@ const createRandomTodo = (): ITodo => {
       title: faker.lorem.words(3),
       description: faker.lorem.sentence(),
       dueDate: faker.date.future().toString(),
-      priority: faker.helpers.arrayElement(['low', 'medium', 'high'])
+      priority: faker.helpers.arrayElement(['low', 'medium', 'high']),
+      done: faker.datatype.boolean()
     }))
   }
 }
@@ -98,6 +99,17 @@ const useTodoStore = defineStore('todo', {
       if (foundIndex === -1) return;
 
       parentTodo.items.splice(foundIndex, 1);
+    },
+    toggleCheckTodoItem(parentId: number, id: number) {
+      const parentTodo = this.list.find((todo) => todo.id === parentId);
+
+      if (!parentTodo) return;
+
+      const foundIndex = parentTodo.items.findIndex((item) => item.id === id);
+
+      if (foundIndex === -1) return;
+
+      parentTodo.items[foundIndex].done = !parentTodo.items[foundIndex].done;
     },
 
   },

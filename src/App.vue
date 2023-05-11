@@ -10,7 +10,7 @@ import formatDate from './utils/formatDate';
 const store = useTodoStore()
 const allTodoItems = store.list.flatMap(todo => todo.items)
 allTodoItems.sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
-const nearestTodoItem = allTodoItems.find(item => new Date(item.dueDate) >= new Date())
+const nearestTodoItem = allTodoItems.find(item => new Date(item.dueDate) >= new Date() && !item.done);
 
 
 onMounted(() => {
