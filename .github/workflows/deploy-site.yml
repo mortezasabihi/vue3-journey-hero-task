@@ -27,9 +27,9 @@ jobs:
           cmd: install
 
       - name: Build Site
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: build
+        run: |
+          NODE_ENV=production yarn build
+          touch dist/.nojekyll
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
